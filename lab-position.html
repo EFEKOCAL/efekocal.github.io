@@ -3,315 +3,351 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fotoğrafçılık Kulübü — Etkinlik Duyurusu</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <title>Lab: CSS Position — Efe Koçal</title>
 
   <style>
-    /* ── RESET & TOKENS ───────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ── RESET — mevcut siteyle aynı ── */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
+    /* ── TOKENS — styles/styles.css'ten birebir ── */
     :root {
-      --ink:     #0d0d0d;
-      --paper:   #f4f1eb;
-      --cream:   #ede9df;
-      --accent:  #c8392b;
-      --muted:   #888078;
-      --white:   #ffffff;
-      --shadow:  0 8px 40px rgba(0,0,0,.13);
-      --radius:  4px;
-      --ff-head: 'Playfair Display', Georgia, serif;
-      --ff-body: 'DM Sans', sans-serif;
+      --bg:       #121212;
+      --surface:  #1e1e1e;
+      --text:     #e0e0e0;
+      --muted:    #777;
+      --cyan:     #00ffcc;
+      --red:      #ff4655;
+      --border:   #333;
+      --radius:   8px;
     }
 
     body {
-      background: var(--paper);
-      font-family: var(--ff-body);
-      color: var(--ink);
-      min-height: 160vh; /* scroll için uzatıldı — fixed öğeyi test et */
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 30px;
+      min-height: 180vh; /* scroll alanı — fixed öğeleri test et */
     }
 
-    /* ── FIXED NAV BAR ────────────────────────────────────── */
-    /* position: fixed — kontrol listesi ✓ */
-    .fixed-nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 1000;
-      background: var(--ink);
-      color: var(--white);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2rem;
-      height: 52px;
-      font-size: .8rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
+    /* ── HEADER — styles.css header ile aynı yapı ── */
+    header {
+      background-color: var(--surface);
+      padding: 25px;
+      border-bottom: 3px solid var(--cyan);
+      border-radius: var(--radius) var(--radius) 0 0;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 10px rgba(0,0,0,.5);
     }
 
-    .fixed-nav a {
-      color: var(--white);
+    header h1 { color: var(--cyan); margin-bottom: 15px; letter-spacing: .5px; }
+    header p  { margin-bottom: 15px; letter-spacing: .5px; }
+
+    nav ul { list-style-type: none; text-align: right; margin-bottom: 20px; }
+    nav ul li { display: inline-block; margin-left: 15px; }
+    nav ul li a {
       text-decoration: none;
-      padding: .4rem .9rem;
-      border: 1px solid rgba(255,255,255,.35);
-      border-radius: var(--radius);
-      transition: background .25s, color .25s;   /* CSS etkileşimi 1 ✓ */
-      cursor: pointer;
+      color: #b3b3b3;
+      font-weight: 600;
+      padding: 8px 16px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      transition: all .3s ease-in-out;   /* CSS etkileşimi 1 — transition ✓ */
+    }
+    nav ul li a:hover {
+      color: var(--bg);
+      background-color: var(--cyan);
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+      cursor: pointer;                   /* hover cursor ✓ */
     }
 
-    .fixed-nav a:hover {
-      background: var(--white);
-      color: var(--ink);
-    }
-
-    .fixed-nav .nav-title { font-family: var(--ff-head); font-size: .95rem; letter-spacing: .05em; }
-
-    /* ── PAGE WRAPPER ─────────────────────────────────────── */
-    .page {
-      padding-top: 88px;   /* fixed-nav height + gap */
-      padding-bottom: 6rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2.5rem;
-    }
-
-    /* ── SECTION HEADING ──────────────────────────────────── */
-    .section-heading {
-      text-align: center;
-      max-width: 640px;
-    }
-
-    .section-heading .eyebrow {
-      font-size: .72rem;
-      letter-spacing: .2em;
-      text-transform: uppercase;
+    /* ── EYEBROW ── */
+    .page-eyebrow {
+      font-size: 13px;
       color: var(--muted);
-      margin-bottom: .6rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
     }
 
-    .section-heading h1 {
-      font-family: var(--ff-head);
-      font-size: clamp(1.9rem, 4vw, 2.8rem);
-      line-height: 1.15;
-      color: var(--ink);
-    }
-
-    /* ── ANNOUNCEMENT CARD ────────────────────────────────── */
-    /* position: relative — kapsayıcı kontrol listesi ✓ */
+    /* ══════════════════════════════════════════════
+       ANNOUNCEMENT CARD
+       position: relative — kapsayıcı ✓
+    ══════════════════════════════════════════════ */
     .card {
-      position: relative;          /* absolute çocukların referans noktası */
-      width: min(720px, 92vw);
-      min-height: 440px;
-      background: var(--white);
-      border-radius: 2px;
-      box-shadow: var(--shadow);
-      padding: 3rem 3rem 4rem;
+      position: relative;
+      background-color: var(--surface);
+      border-left: 4px solid var(--cyan);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 40px 36px 60px;
+      min-height: 360px;
+      max-width: 760px;
+      box-shadow: 2px 2px 15px rgba(0,0,0,.4);
+      margin-bottom: 30px;
       overflow: visible;
     }
 
-    /* Dekoratif arka plan dairesi — z-index demo */
+    /* Dekoratif neon daire — z-index 0 */
     .card::before {
       content: '';
       position: absolute;
-      bottom: -40px; right: -40px;
-      width: 260px; height: 260px;
+      bottom: -30px; right: -30px;
+      width: 220px; height: 220px;
       border-radius: 50%;
-      background: radial-gradient(circle, #e8e2d6 0%, transparent 70%);
-      z-index: 0;  /* z-index kullanımı ✓ */
+      background: radial-gradient(circle, rgba(0,255,204,.07) 0%, transparent 70%);
+      z-index: 0;   /* z-index kullanımı ✓ */
       pointer-events: none;
     }
 
-    .card-content {
+    /* İçerik z-index 1 — dairenin üstünde */
+    .card-body {
       position: relative;
-      z-index: 1;   /* içeriği dekoratif katmanın üstüne taşı */
+      z-index: 1;
     }
 
-    .card-content h2 {
-      font-family: var(--ff-head);
-      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-      line-height: 1.2;
-      margin-bottom: 1rem;
+    .card-body h2 {
+      color: var(--cyan);
+      font-size: 1.7rem;
+      margin-bottom: 15px;
+      letter-spacing: .5px;
       max-width: 420px;
     }
 
-    .card-content p {
-      font-size: .95rem;
-      line-height: 1.75;
-      color: #3a3530;
-      max-width: 400px;
-      font-weight: 300;
+    .card-body p {
+      font-size: 16px;
+      color: #cccccc;
+      line-height: 1.8;
+      text-align: left;
+      max-width: 430px;
     }
 
-    /* ── ABSOLUTE BADGE 1 — Tarih (sağ üst) ──────────────── */
-    /* position: absolute ✓ */
+    /* ══════════════════════════════════════════════
+       ABSOLUTE BADGE 1 — Tarih (sağ üst)
+       position: absolute ✓
+    ══════════════════════════════════════════════ */
     .badge-date {
       position: absolute;
-      top: -18px; right: 32px;
-      background: var(--ink);
-      color: var(--white);
-      font-size: .78rem;
-      font-weight: 500;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      padding: .5rem 1.1rem;
-      border-radius: 999px;
-      z-index: 2;
-      cursor: default;
-      transition: transform .2s, background .2s;  /* CSS etkileşimi 1 (devam) */
-    }
-    .badge-date:hover {
-      background: var(--accent);
-      transform: translateY(-3px);
-      cursor: pointer;
-    }
-
-    /* ── ABSOLUTE BADGE 2 — Ücretsiz rozet (sol üst) ─────── */
-    .badge-free {
-      position: absolute;
-      top: 20px; left: -14px;
-      background: var(--accent);
-      color: var(--white);
-      font-size: .72rem;
-      font-weight: 500;
+      top: -16px; right: 28px;
+      background-color: var(--cyan);
+      color: var(--bg);
+      font-size: 12px;
+      font-weight: 700;
       letter-spacing: .08em;
       text-transform: uppercase;
-      padding: .4rem .85rem;
-      border-radius: var(--radius);
+      padding: 6px 16px;
+      border-radius: 999px;
       z-index: 3;
       cursor: pointer;
-      /* CSS etkileşimi 2: @keyframes pulse ✓ */
-      animation: pulse 2.6s ease-in-out infinite;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .badge-date:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 14px var(--cyan);
     }
 
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(200,57,43,.45); }
-      50%       { box-shadow: 0 0 0 8px rgba(200,57,43,0); }
+    /* ══════════════════════════════════════════════
+       ABSOLUTE BADGE 2 — Ücretsiz (sol üst, pulse)
+       position: absolute ✓
+    ══════════════════════════════════════════════ */
+    .badge-free {
+      position: absolute;
+      top: 18px; left: -12px;
+      background-color: var(--red);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 5px 13px;
+      border-radius: 4px;
+      z-index: 3;
+      cursor: pointer;
+      /* CSS etkileşimi 2 — @keyframes pulse ✓ */
+      animation: neon-pulse 2.4s ease-in-out infinite;
     }
 
-    /* ── ABSOLUTE BADGE 3 — Konum (orta alt) ─────────────── */
+    @keyframes neon-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,70,85,.5); }
+      50%       { box-shadow: 0 0 0 8px rgba(255,70,85,0); }
+    }
+
+    /* ══════════════════════════════════════════════
+       ABSOLUTE BADGE 3 — Konum (orta alt)
+       position: absolute ✓
+    ══════════════════════════════════════════════ */
     .badge-location {
       position: absolute;
-      bottom: 28px; left: 50%;
+      bottom: 24px; left: 50%;
       transform: translateX(-50%);
-      background: var(--cream);
-      color: var(--ink);
-      font-size: .8rem;
-      border: 1px solid #d5cfc4;
-      padding: .5rem 1.2rem;
+      background-color: #2a2a2a;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 13px;
+      padding: 7px 18px;
       border-radius: 999px;
       z-index: 2;
       cursor: pointer;
       white-space: nowrap;
-      transition: box-shadow .25s, transform .25s;
+      transition: border-color .25s, box-shadow .25s, transform .25s;
     }
     .badge-location:hover {
-      box-shadow: 0 4px 18px rgba(0,0,0,.12);
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
       transform: translateX(-50%) translateY(-3px);
     }
 
-    /* ── ABSOLUTE BADGE 4 — Son Kayıt (sağ alt) ──────────── */
+    /* ══════════════════════════════════════════════
+       ABSOLUTE BADGE 4 — Son Kayıt (sağ alt)
+       position: absolute ✓  (toplam 4 absolute öğe)
+    ══════════════════════════════════════════════ */
     .badge-deadline {
       position: absolute;
-      bottom: -16px; right: 48px;
-      background: var(--white);
-      border: 2px solid var(--ink);
-      color: var(--ink);
-      font-size: .75rem;
-      font-weight: 500;
-      padding: .45rem 1rem;
-      border-radius: var(--radius);
+      bottom: -14px; right: 44px;
+      background-color: var(--surface);
+      border: 2px solid var(--red);
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 4px;
       z-index: 2;
       cursor: pointer;
-      transition: background .2s, color .2s;
+      transition: background-color .2s, color .2s;
     }
     .badge-deadline:hover {
-      background: var(--ink);
-      color: var(--white);
+      background-color: var(--red);
+      color: #fff;
     }
 
-    /* ── FOOTER ───────────────────────────────────────────── */
+    /* ── FOOTER — styles.css footer ile aynı ── */
     footer {
+      background-color: var(--surface);
       text-align: center;
-      font-size: .76rem;
-      color: var(--muted);
-      letter-spacing: .08em;
-      margin-top: 3rem;
+      padding: 20px;
+      border-top: 1px solid var(--border);
+      border-radius: 0 0 var(--radius) var(--radius);
+      margin-top: 60px;
     }
 
-    /* ── FIXED FLOATING BUTTON (sağ alt) ─────────────────── */
-    /* position: fixed ✓ (scroll sırasında sabit) */
+    footer p {
+      margin-bottom: 0;
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: .5px;
+    }
+
+    /* ══════════════════════════════════════════════
+       FIXED ELEMENT 1 — Sol üst gösterge
+       position: fixed ✓
+    ══════════════════════════════════════════════ */
+    .fixed-scroll-hint {
+      position: fixed;
+      top: 18px; left: 18px;
+      z-index: 1000;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: default;
+      animation: blink-border 3s ease-in-out infinite;
+    }
+
+    @keyframes blink-border {
+      0%, 100% { border-color: var(--border); }
+      50%       { border-color: var(--cyan); box-shadow: 0 0 6px var(--cyan); }
+    }
+
+    /* ══════════════════════════════════════════════
+       FIXED ELEMENT 2 — Sağ alt FAB
+       position: fixed ✓
+    ══════════════════════════════════════════════ */
     .fixed-fab {
       position: fixed;
-      bottom: 2rem; right: 2rem;
-      z-index: 900;
-      background: var(--ink);
-      color: var(--white);
-      font-family: var(--ff-body);
-      font-size: .8rem;
+      bottom: 28px; right: 28px;
+      z-index: 1000;
+      background-color: var(--cyan);
+      color: var(--bg);
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
       letter-spacing: .08em;
       text-transform: uppercase;
-      padding: .75rem 1.4rem;
+      padding: 12px 22px;
       border-radius: 999px;
       border: none;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(0,0,0,.25);
-      transition: background .2s, transform .15s;
+      box-shadow: 0 0 16px var(--cyan);
+      transition: background-color .2s, transform .15s, box-shadow .2s;
     }
-    .fixed-fab:hover  { background: var(--accent); transform: scale(1.05); }
-    .fixed-fab:active { transform: scale(.97); }   /* :active efekti ✓ */
+    .fixed-fab:hover {
+      background-color: var(--red);
+      box-shadow: 0 0 16px var(--red);
+      transform: scale(1.06);
+    }
+    .fixed-fab:active { transform: scale(.96); }   /* :active efekti ✓ */
   </style>
 </head>
 <body>
 
-  <!-- ① position: fixed — üst nav bar -->
-  <nav class="fixed-nav">
-    <span class="nav-title">MÜ Fotoğrafçılık Kulübü</span>
-    <a href="index.html">← Ana Sayfa</a>
-  </nav>
+  <!-- ① position: fixed — sol üst scroll hint -->
+  <div class="fixed-scroll-hint">↕ Scroll et</div>
 
-  <div class="page">
+  <!-- HEADER -->
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Ana Sayfa</a></li>
+        <li><a href="about.html">Hakkında</a></li>
+        <li><a href="interests.html">İlgi Alanları</a></li>
+        <li><a href="contact.html">İletişim</a></li>
+        <li><a href="lab-position.html" style="color:#121212;background:#00ffcc;border-color:#00ffcc;">Lab: CSS Position</a></li>
+      </ul>
+    </nav>
+    <h1>Lab Hafta 5 — CSS Position</h1>
+    <p>Etkinlik Duyuru Kartı · position: relative / absolute / fixed · z-index · animasyon</p>
+  </header>
 
-    <!-- Kısa başlık alanı -->
-    <header class="section-heading">
-      <p class="eyebrow">Etkinlik Duyurusu · Bahar 2026</p>
-      <h1>Doğa Fotoğrafçılığı<br>Atölyesi</h1>
-    </header>
+  <p class="page-eyebrow">Marmara Üniversitesi · BLM3080 Web Programlama · 2026</p>
 
-    <!-- ② position: relative — ana kart kapsayıcı -->
-    <article class="card">
+  <!-- ② position: relative — ana kart kapsayıcı -->
+  <article class="card">
 
-      <!-- ABSOLUTE öğe 1 — tarih rozeti -->
-      <div class="badge-date">18 Nisan 2026</div>
+    <!-- ABSOLUTE 1 — tarih rozeti -->
+    <div class="badge-date">18 Nisan 2026</div>
 
-      <!-- ABSOLUTE öğe 2 — ücretsiz rozet (pulse animasyonu) -->
-      <div class="badge-free">Ücretsiz</div>
+    <!-- ABSOLUTE 2 — ücretsiz (pulse animasyonu) -->
+    <div class="badge-free">Ücretsiz</div>
 
-      <div class="card-content">
-        <h2>Işık, Çerçeve&nbsp;&amp;&nbsp;Kompozisyon</h2>
-        <p>
-          Bu atölyede golden-hour ışığını okuma, histogram yorumlama ve
-          saha kompozisyon teknikleri üzerine yoğun bir program sizi bekliyor.
-          Katılımcı sayısı sınırlıdır; erken kayıt önerilir.
-        </p>
-      </div>
+    <div class="card-body">
+      <h2>Fotoğrafçılık Kulübü<br>Doğa Atölyesi</h2>
+      <p>
+        Golden-hour ışığını okuma, histogram yorumlama ve saha
+        kompozisyon tekniklerini kapsayan bu atölyede katılımcı sayısı
+        sınırlıdır. Kayıt için son tarihi kaçırmayın.
+      </p>
+    </div>
 
-      <!-- ABSOLUTE öğe 3 — konum rozeti -->
-      <div class="badge-location">📍 Marmara Üniversitesi · B Blok Amfi</div>
+    <!-- ABSOLUTE 3 — konum rozeti -->
+    <div class="badge-location">📍 MÜ Teknoloji Fakültesi · B Blok Amfi</div>
 
-      <!-- ABSOLUTE öğe 4 — son kayıt rozeti -->
-      <div class="badge-deadline">Son Kayıt: 14 Nisan</div>
+    <!-- ABSOLUTE 4 — son kayıt rozeti -->
+    <div class="badge-deadline">Son Kayıt: 14 Nisan</div>
 
-    </article>
+  </article>
 
-    <footer>
-      2026 · Marmara Üniversitesi Fotoğrafçılık Kulübü · LAB-Position Çalışması
-    </footer>
+  <footer>
+    <p>© 2026 Efe Koçal · Lab Hafta 5 · CSS Position Çalışması</p>
+  </footer>
 
-  </div>
-
-  <!-- ③ position: fixed — sağ alt FAB (scroll sırasında sabit) -->
+  <!-- ③ position: fixed — sağ alt FAB -->
   <button class="fixed-fab">Kayıt Ol</button>
 
 </body>
