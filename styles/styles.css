@@ -1,4 +1,131 @@
-/* İletişim Formu */
+/* Tüm elementlerin margin ve padding'ini sıfırlar.
+   box-sizing: border-box — width/height padding ve border'ı da kapsar.
+   font-family — tüm sayfada geçerli olacak yazı tipi */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Sayfanın genel arka plan ve metin rengi.
+   padding: 30px — sayfa kenarlarında nefes alanı */
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    padding: 30px;
+}
+
+/* Grup seçici — h1, h2, p'ye aynı anda stil verir.
+   letter-spacing — harfler arası boşluk */
+h1, h2, p {
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+}
+
+/* Header kutusu — karanlık arka plan, alt kısımda neon çizgi */
+header {
+    background-color: #1e1e1e;
+    padding: 25px;
+    border-bottom: 3px solid #00ffcc;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+/* Header içindeki h1'e özel renk — neon yeşil */
+header h1 {
+    color: #00ffcc;
+}
+
+/* Hiyerarşik seçici — nav içindeki ul'ye stil.
+   list-style-type: none — madde işaretlerini kaldırır */
+nav ul {
+    list-style-type: none;
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+/* display: inline-block — li'ler yan yana dizilir (yatay menü) */
+nav ul li {
+    display: inline-block;
+    margin-left: 15px;
+}
+
+/* Menü linkleri — şeffaf border, hover'a hazır */
+nav ul li a {
+    text-decoration: none;
+    color: #b3b3b3;
+    font-weight: 600;
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover efekti — linkin üstüne gelince neon parlama */
+nav ul li a:hover {
+    color: #121212;
+    background-color: #00ffcc;
+    border-color: #00ffcc;
+    box-shadow: 0 0 10px #00ffcc;
+}
+
+/* Flexbox ile iki kutuyu yan yana getirir */
+.layout-container {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 25px;
+}
+
+/* Sol içerik kutusu — %65 genişlik, sol neon çizgi */
+.content-box {
+    background-color: #1e1e1e;
+    border-left: 4px solid #00ffcc;
+    padding: 25px;
+    width: 65%;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 2px 2px 15px rgba(0,0,0,0.4);
+}
+
+/* Sağ yan menü kutusu — %35 genişlik, kırmızı çizgi */
+.sidebar-box {
+    background-color: #1e1e1e;
+    border-left: 4px solid #ff4655;
+    padding: 25px;
+    width: 35%;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 2px 2px 15px rgba(0,0,0,0.4);
+}
+
+/* İçerik ve sidebar h2 renkleri */
+.content-box h2 { color: #00ffcc; }
+.sidebar-box h2 { color: #ff4655; }
+
+/* Paragraf stilleri — font boyutu, renk, satır aralığı, hizalama */
+.content-box p, .sidebar-box p {
+    font-size: 16px;
+    color: #cccccc;
+    line-height: 1.8;
+    text-align: left;
+}
+
+/* Footer — sayfanın alt kısmı */
+footer {
+    background-color: #1e1e1e;
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid #333;
+    border-radius: 0 0 8px 8px;
+}
+
+footer p {
+    margin-bottom: 0;
+    font-size: 14px;
+    color: #777;
+}
+
+/* İletişim formu kapsayıcı — ortalanmış, çerçeveli kutu */
 .contact-container {
     width: 600px;
     margin: 40px auto;
@@ -8,17 +135,17 @@
     background-color: #1e1e1e;
 }
 
-.contact-container h2 {
-    color: #00ffcc;
-    margin-bottom: 20px;
-}
+/* Form başlığı */
+.contact-container h2 { color: #00ffcc; }
 
+/* Her label alt satıra geçer, soluk renk */
 label {
     display: block;
     margin-bottom: 6px;
     color: #b3b3b3;
 }
 
+/* Tüm input türleri — tam genişlik, koyu arka plan */
 input, select, textarea {
     width: 100%;
     padding: 10px;
@@ -29,10 +156,10 @@ input, select, textarea {
     color: #e0e0e0;
 }
 
-textarea {
-    height: 120px;
-}
+/* Textarea daha yüksek */
+textarea { height: 120px; }
 
+/* Gönder butonu — neon yeşil, hover'da kırmızıya geçer */
 button {
     background-color: #00ffcc;
     color: #121212;
