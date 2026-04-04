@@ -1,121 +1,49 @@
-/* Genel Ayarlar - Karanlık Tema */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-body {
-    background-color: #121212; /* Koyu gri/siyah arka plan */
-    color: #e0e0e0; /* Açık gri okunabilir metin */
-    padding: 30px;
-}
-
-/* 1. ZORUNLULUK: Grup Seçici */
-h1, h2, p {
-    margin-bottom: 15px;
-    letter-spacing: 0.5px;
-}
-
-/* Üst Kısım ve Menü */
-header {
+/* İletişim Formu */
+.contact-container {
+    width: 600px;
+    margin: 40px auto;
+    padding: 40px;
+    border: 1px solid #333;
+    border-radius: 8px;
     background-color: #1e1e1e;
-    padding: 25px;
-    border-bottom: 3px solid #00ffcc; /* Neon yeşil/mavi vurgu */
-    border-radius: 8px 8px 0 0;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
-header h1 {
+.contact-container h2 {
     color: #00ffcc;
-}
-
-/* 2. ZORUNLULUK: Hiyerarşik Seçici */
-nav ul {
-    list-style-type: none;
-    text-align: right;
     margin-bottom: 20px;
 }
 
-/* 3. ZORUNLULUK: Yatay menü için display: inline-block */
-nav ul li {
-    display: inline-block;
-    margin-left: 15px;
-}
-
-nav ul li a {
-    text-decoration: none;
+label {
+    display: block;
+    margin-bottom: 6px;
     color: #b3b3b3;
-    font-weight: 600;
-    padding: 8px 16px;
-    border: 1px solid transparent;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 16px;
+    border: 1px solid #333;
     border-radius: 4px;
-    transition: all 0.3s ease-in-out;
+    background-color: #121212;
+    color: #e0e0e0;
 }
 
-/* 4. ZORUNLULUK: Hover efekti (Neon Parlama) */
-nav ul li a:hover {
-    color: #121212;
+textarea {
+    height: 120px;
+}
+
+button {
     background-color: #00ffcc;
-    border-color: #00ffcc;
-    box-shadow: 0 0 10px #00ffcc;
+    color: #121212;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
 }
 
-/* 5. ZORUNLULUK: Kutuları yan yana getirme */
-.layout-container {
-    display: flex;
-    gap: 25px;
-    margin-bottom: 25px;
-}
-
-/* Sol İçerik ve Sağ Yan Menü Kutuları (Farklı tasarım) */
-.content-box {
-    background-color: #1e1e1e;
-    border-left: 4px solid #00ffcc; /* Etrafı sarmak yerine sadece sol çizgi */
-    padding: 25px;
-    width: 65%;
-    border-radius: 0 8px 8px 0;
-    box-shadow: 2px 2px 15px rgba(0,0,0,0.4);
-}
-
-.sidebar-box {
-    background-color: #1e1e1e;
-    border-left: 4px solid #ff4655; /* Kontrast yaratmak için neon kırmızı/turuncu */
-    padding: 25px;
-    width: 35%;
-    border-radius: 0 8px 8px 0;
-    box-shadow: 2px 2px 15px rgba(0,0,0,0.4);
-}
-
-.content-box h2 {
-    color: #00ffcc;
-}
-
-.sidebar-box h2 {
-    color: #ff4655;
-}
-
-/* 6. ZORUNLULUK: 3 farklı özellik ile metin düzenlemesi */
-.content-box p, .sidebar-box p {
-    font-size: 16px;       /* 1. Özellik */
-    color: #cccccc;        /* 2. Özellik */
-    line-height: 1.8;      /* 3. Özellik */
-    text-align: left;      /* 4. Özellik */
-}
-
-/* Alt Kısım (Footer) */
-footer {
-    background-color: #1e1e1e;
-    text-align: center;
-    padding: 20px;
-    border-top: 1px solid #333;
-    border-radius: 0 0 8px 8px;
-}
-
-footer p {
-    margin-bottom: 0;
-    font-size: 14px;
-    color: #777;
+button:hover {
+    background-color: #ff4655;
+    color: #ffffff;
 }
