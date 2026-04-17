@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Birim Dönüştürücü — Efe Koçal</title>
+
+  <style>
+    /* ── RESET ── */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* ── TOKENS ── */
+    :root {
+      --bg:       #121212;
+      --surface:  #1e1e1e;
+      --text:     #e0e0e0;
+      --muted:    #777;
+      --cyan:     #00ffcc;
+      --red:      #ff4655;
+      --border:   #333;
+      --radius:   8px;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 30px;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER + NAV ── */
+    header {
+      background-color: var(--surface);
+      padding: 25px;
+      border-bottom: 3px solid var(--cyan);
+      border-radius: var(--radius) var(--radius) 0 0;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 10px rgba(0,0,0,.5);
+    }
+
+    header h1 { color: var(--cyan); margin-bottom: 15px; letter-spacing: .5px; }
+    header p  { margin-bottom: 15px; letter-spacing: .5px; color: #b3b3b3; }
+
+    nav ul { list-style-type: none; text-align: right; margin-bottom: 0; }
+    nav ul li { display: inline-block; margin-left: 15px; }
+    nav ul li a {
+      text-decoration: none;
+      color: #b3b3b3;
+      font-weight: 600;
+      padding: 8px 16px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      transition: all .3s ease-in-out;
+    }
+    nav ul li a:hover {
+      color: var(--bg);
+      background-color: var(--cyan);
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+      cursor: pointer;
+    }
+    nav ul li a.active {
+      color: var(--bg);
+      background-color: var(--cyan);
+      border-color: var(--cyan);
+    }
+
+    /* ── KART ── */
+    .card {
+      background-color: var(--surface);
+      border-left: 4px solid var(--cyan);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 32px 36px;
+      max-width: 600px;
+      margin: 0 auto 25px;
+      box-shadow: 2px 2px 15px rgba(0,0,0,.4);
+    }
+
+    .card h2 {
+      color: var(--cyan);
+      font-size: 1.6rem;
+      margin-bottom: 22px;
+      letter-spacing: .5px;
+    }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 16px; }
+
+    label {
+      display: block;
+      font-size: 14px;
+      color: #b3b3b3;
+      margin-bottom: 6px;
+      letter-spacing: .3px;
+    }
+
+    .form-control,
+    .form-select {
+      width: 100%;
+      padding: 12px 14px;
+      background-color: #2a2a2a;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 15px;
+      transition: border-color .25s, box-shadow .25s;
+    }
+    .form-control:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 8px rgba(0,255,204,.3);
+    }
+
+    .form-select {
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%2300ffcc' d='M6 8L0 0h12z'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 38px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background-color: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .25s;
+      margin-top: 6px;
+    }
+    .btn:hover {
+      background-color: var(--cyan);
+      color: var(--bg);
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+    }
+
+    /* ── SONUÇ ── */
+    .result {
+      background-color: #2a2a2a;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--cyan);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      margin-top: 20px;
+      text-align: center;
+      font-size: 1.05rem;
+      color: var(--cyan);
+      font-weight: 600;
+      display: none;
+    }
+    .result.show { display: block; }
+
+    .error {
+      color: var(--red);
+      font-size: 13px;
+      margin-top: 8px;
+      display: none;
+    }
+    .error.show { display: block; }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 20px;
+      margin-top: 30px;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Ana Sayfa</a></li>
+        <li><a href="about.html">Hakkında</a></li>
+        <li><a href="interests.html">İlgi Alanları</a></li>
+        <li><a href="contact.html">İletişim</a></li>
+        <li><a href="lab-position.html">Lab: CSS Position</a></li>
+        <li><a href="not-hesaplama.html">Not Hesaplama</a></li>
+        <li><a href="birim-donusturucu.html" class="active">Birim Dönüştürücü</a></li>
+      </ul>
+    </nav>
+    <h1>Birim Dönüştürücü</h1>
+    <p>Uzunluk · Sıcaklık · Ağırlık</p>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Birim Dönüştürücü</h2>
+
+      <form id="convForm" autocomplete="off">
+        <div class="form-group">
+          <label for="value">Değer Giriniz:</label>
+          <input type="text" id="value" class="form-control" placeholder="Örn: 50" />
+        </div>
+
+        <div class="form-group">
+          <label for="convType">Dönüşüm Tipi:</label>
+          <select id="convType" class="form-select">
+            <option value="M-KM">Metre → Kilometre</option>
+            <option value="C-F">Celsius → Fahrenheit</option>
+            <option value="KG-G">Kilogram → Gram</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn">Hesapla</button>
+        <div id="error" class="error"></div>
+      </form>
+
+      <div id="result" class="result"></div>
+    </div>
+  </main>
+
+  <footer>
+    © 2026 Efe Koçal · Web Programlama
+  </footer>
+
+  <script>
+    /* Dönüşüm fonksiyonları */
+    const converters = {
+      'M-KM' : v => v / 1000,
+      'C-F'  : v => v * 9 / 5 + 32,
+      'KG-G' : v => v * 1000,
+    };
+
+    /* Sonuç gösterim birimleri */
+    const labels = {
+      'M-KM' : ['m',  'km'],
+      'C-F'  : ['°C', '°F'],
+      'KG-G' : ['kg', 'g'],
+    };
+
+    const form   = document.getElementById('convForm');
+    const errBox = document.getElementById('error');
+    const result = document.getElementById('result');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const raw  = document.getElementById('value').value.trim().replace(',', '.');
+      const type = document.getElementById('convType').value;
+      const v    = parseFloat(raw);
+
+      errBox.classList.remove('show');
+      result.classList.remove('show');
+
+      if (raw === '' || isNaN(v)) {
+        errBox.textContent = 'Lütfen geçerli bir sayısal değer giriniz.';
+        errBox.classList.add('show');
+        return;
+      }
+
+      const out        = converters[type](v);
+      const [from, to] = labels[type];
+
+      /* Anlamlı yuvarlama: 3 ondalık ama gereksiz sıfırları at */
+      const formatted = Number(out.toFixed(3)).toString();
+
+      result.textContent = `Sonuç: ${v} ${from} = ${formatted} ${to}`;
+      result.classList.add('show');
+    });
+  </script>
+
+</body>
+</html>
