@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Öğrenci Not Hesaplama — Efe Koçal</title>
+
+  <style>
+    /* ── RESET ── */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* ── TOKENS — site geneliyle aynı ── */
+    :root {
+      --bg:       #121212;
+      --surface:  #1e1e1e;
+      --text:     #e0e0e0;
+      --muted:    #777;
+      --cyan:     #00ffcc;
+      --red:      #ff4655;
+      --border:   #333;
+      --radius:   8px;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 30px;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER + NAV ── */
+    header {
+      background-color: var(--surface);
+      padding: 25px;
+      border-bottom: 3px solid var(--cyan);
+      border-radius: var(--radius) var(--radius) 0 0;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 10px rgba(0,0,0,.5);
+    }
+
+    header h1 { color: var(--cyan); margin-bottom: 15px; letter-spacing: .5px; }
+    header p  { margin-bottom: 15px; letter-spacing: .5px; color: #b3b3b3; }
+
+    nav ul { list-style-type: none; text-align: right; margin-bottom: 0; }
+    nav ul li { display: inline-block; margin-left: 15px; }
+    nav ul li a {
+      text-decoration: none;
+      color: #b3b3b3;
+      font-weight: 600;
+      padding: 8px 16px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      transition: all .3s ease-in-out;
+    }
+    nav ul li a:hover {
+      color: var(--bg);
+      background-color: var(--cyan);
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+      cursor: pointer;
+    }
+    nav ul li a.active {
+      color: var(--bg);
+      background-color: var(--cyan);
+      border-color: var(--cyan);
+    }
+
+    /* ── KART ── */
+    .card {
+      background-color: var(--surface);
+      border-left: 4px solid var(--cyan);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 32px 36px;
+      max-width: 600px;
+      margin: 0 auto 25px;
+      box-shadow: 2px 2px 15px rgba(0,0,0,.4);
+    }
+
+    .card h2 {
+      color: var(--cyan);
+      font-size: 1.6rem;
+      margin-bottom: 22px;
+      letter-spacing: .5px;
+    }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 14px; }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 14px;
+      background-color: #2a2a2a;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 15px;
+      transition: border-color .25s, box-shadow .25s;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 8px rgba(0,255,204,.3);
+    }
+    .form-control::placeholder { color: var(--muted); }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background-color: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .25s;
+      margin-top: 6px;
+    }
+    .btn:hover {
+      background-color: var(--cyan);
+      color: var(--bg);
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+    }
+
+    /* ── SONUÇ KUTUSU ── */
+    .result {
+      background-color: #2a2a2a;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--cyan);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      margin-top: 24px;
+      display: none;       /* başlangıçta gizli */
+    }
+    .result.show { display: block; }
+
+    .result h3 {
+      color: var(--cyan);
+      margin-bottom: 10px;
+      font-size: 1.15rem;
+    }
+    .result p {
+      font-size: 14px;
+      line-height: 1.8;
+      color: #cccccc;
+    }
+    .result .status-pass { color: var(--cyan); font-weight: 700; }
+    .result .status-fail { color: var(--red);  font-weight: 700; }
+
+    .error {
+      color: var(--red);
+      font-size: 13px;
+      margin-top: 8px;
+      display: none;
+    }
+    .error.show { display: block; }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 20px;
+      margin-top: 30px;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Ana Sayfa</a></li>
+        <li><a href="about.html">Hakkında</a></li>
+        <li><a href="interests.html">İlgi Alanları</a></li>
+        <li><a href="contact.html">İletişim</a></li>
+        <li><a href="lab-position.html">Lab: CSS Position</a></li>
+        <li><a href="not-hesaplama.html" class="active">Not Hesaplama</a></li>
+        <li><a href="birim-donusturucu.html">Birim Dönüştürücü</a></li>
+      </ul>
+    </nav>
+    <h1>Öğrenci Not Hesaplama</h1>
+    <p>Vize %40 · Final %60 · Geçme notu ≥ 50</p>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Öğrenci Not Hesaplama</h2>
+
+      <form id="gradeForm" autocomplete="off">
+        <div class="form-group">
+          <input type="text" id="adSoyad" class="form-control" placeholder="Ad Soyad" />
+        </div>
+        <div class="form-group">
+          <input type="text" id="vize" class="form-control" placeholder="Vize Notu (0–100)" />
+        </div>
+        <div class="form-group">
+          <input type="text" id="final" class="form-control" placeholder="Final Notu (0–100)" />
+        </div>
+
+        <button type="submit" class="btn">Hesapla</button>
+        <div id="error" class="error"></div>
+      </form>
+
+      <div id="result" class="result">
+        <h3 id="rName"></h3>
+        <p>
+          Ortalama: <span id="rAvg"></span><br />
+          Harf Notu: <span id="rLetter"></span><br />
+          Durum: <span id="rStatus"></span>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    © 2026 Efe Koçal · Web Programlama
+  </footer>
+
+  <script>
+    /* Harf notu tablosu — ödevde özel bir tablo verilmediği için
+       yaygın kullanılan aralıkları aldım; gerekirse değiştirilebilir. */
+    function harfNotu(o) {
+      if (o >= 90) return 'AA';
+      if (o >= 85) return 'BA';
+      if (o >= 75) return 'BB';
+      if (o >= 65) return 'CB';
+      if (o >= 55) return 'CC';
+      if (o >= 50) return 'DC';
+      if (o >= 45) return 'DD';
+      if (o >= 35) return 'FD';
+      return 'FF';
+    }
+
+    const form    = document.getElementById('gradeForm');
+    const errBox  = document.getElementById('error');
+    const result  = document.getElementById('result');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const ad    = document.getElementById('adSoyad').value.trim();
+      const vize  = parseFloat(document.getElementById('vize').value);
+      const final = parseFloat(document.getElementById('final').value);
+
+      /* ── input validation (girdi doğrulama) ── */
+      errBox.classList.remove('show');
+      result.classList.remove('show');
+
+      if (!ad) {
+        errBox.textContent = 'Lütfen ad soyad giriniz.';
+        errBox.classList.add('show');
+        return;
+      }
+      if (isNaN(vize) || isNaN(final)) {
+        errBox.textContent = 'Vize ve final notları sayı olmalıdır.';
+        errBox.classList.add('show');
+        return;
+      }
+      if (vize < 0 || vize > 100 || final < 0 || final > 100) {
+        errBox.textContent = 'Notlar 0 ile 100 arasında olmalıdır.';
+        errBox.classList.add('show');
+        return;
+      }
+
+      /* ── hesaplama ── */
+      const ortalama = vize * 0.40 + final * 0.60;
+      const harf     = harfNotu(ortalama);
+      const gecti    = ortalama >= 50;
+
+      /* ── ekrana basma ── */
+      document.getElementById('rName').textContent   = ad;
+      document.getElementById('rAvg').textContent    = ortalama.toFixed(2);
+      document.getElementById('rLetter').textContent = harf;
+
+      const stEl = document.getElementById('rStatus');
+      stEl.textContent = gecti ? 'Geçti' : 'Kaldı';
+      stEl.className   = gecti ? 'status-pass' : 'status-fail';
+
+      result.classList.add('show');
+    });
+  </script>
+
+</body>
+</html>
