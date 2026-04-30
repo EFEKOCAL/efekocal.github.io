@@ -243,31 +243,33 @@
 
 <script>
   let timer = null;
-  let seconds = 0;
+  let realTimeSeconds = 0; // Gerçekte geçen saniye
   let distance = 0;
   let currentPace = 0;
 
-  // Elemanları ID ile seçiyoruz
   const runner = document.getElementById('runnerSymbol');
   const car = document.getElementById('carSymbol');
-  const startBtn = document.getElementById('startBtn');
-  const stopBtn = document.getElementById('stopBtn');
   
   function updateDisplay() {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
+    // 1. Mesafe: 1 gerçek saniye = 1 km
+    document.getElementById('dispDist').textContent = `${distance.toFixed(2)} km`;
+    
+    // 2. Simülasyon Süresi: Mesafe * Pace * 60 (Saniye cinsinden)
+    let simTotalSeconds = Math.floor(distance * currentPace * 60);
+    const m = Math.floor(simTotalSeconds / 60);
+    const s = simTotalSeconds % 60;
     document.getElementById('dispTime').textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     
-    document.getElementById('dispDist').textContent = `${distance.toFixed(2)} km`;
     document.getElementById('dispPace').textContent = `${currentPace.toFixed(2)}`;
     
-    // Sadece koşucuyu hareket ettir (10km = %100 genişlik)
+    // 3. Grafik Senkronizasyonu (10 km'lik pist üzerinden)
     if(runner) {
+      // Mesafeyi 10'a bölüp yüzdelik dilime vuruyoruz
       runner.style.left = `${Math.min((distance / 10) * 100, 100)}%`;
     }
   }
 
-  startBtn.addEventListener('click', () => {
+  document.getElementById('startBtn').addEventListener('click', () => {
     if (timer) return;
     
     currentPace = parseFloat(document.getElementById('basePace').value);
@@ -275,18 +277,28 @@
     const targetKm = parseFloat(document.getElementById('targetKm').value);
 
     timer = setInterval(() => {
-      seconds++;
-      distance += (1 / (currentPace * 60));
+      // 1 Gerçek saniye geçti
+      realTimeSeconds++;
+      
+      // Mesafe 1 km arttı (İstediğin ölçek)
+      distance = realTimeSeconds;
 
+      // Pace Değişim Kontrolü
       if (!isNaN(targetKm) && distance >= targetKm) {
         currentPace = targetPace;
       }
 
       updateDisplay();
-    }, 1000);
+
+      // 10km sonunda durdur
+      if (distance >= 10) {
+        clearInterval(timer);
+        timer = null;
+      }
+    }, 1000); // Gerçek zamanlı 1 saniye
   });
 
-  stopBtn.addEventListener('click', () => {
+  document.getElementById('stopBtn').addEventListener('click', () => {
     clearInterval(timer);
     timer = null;
   });
