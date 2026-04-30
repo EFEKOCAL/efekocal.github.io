@@ -181,6 +181,101 @@
   </header>
 
   <main class="container">
+    <!-- KART: KONTROL PANELİ -->
+<div class="card">
+  <h2>Simülasyon Kontrol Paneli</h2>
+  <div class="form-group">
+    <label>Başlangıç Pace (dk/km):</label>
+    <input type="number" id="basePace" class="form-control" value="5.1" step="0.1">
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+    <div class="form-group">
+      <label>Yeni Pace (Değişim):</label>
+      <input type="number" id="targetPace" class="form-control" placeholder="Örn: 4.5">
+    </div>
+    <div class="form-group">
+      <label>Kaçıncı Km'de?</label>
+      <input type="number" id="targetKm" class="form-control" placeholder="Örn: 5">
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 10px; margin-top: 10px;">
+    <button id="startBtn" class="btn" style="background: var(--cyan); color: var(--bg);">Başlat</button>
+    <button id="stopBtn" class="btn" style="border-color: var(--red); color: var(--red);">Durdur</button>
+  </div>
+</div>
+
+<!-- KART: CANLI VERİ -->
+<div class="card" style="text-align: center;">
+  <div style="display: flex; justify-content: space-around;">
+    <div>
+      <label>SÜRE</label>
+      <div id="dispTime" style="font-size: 2rem; color: var(--cyan);">00:00</div>
+    </div>
+    <div>
+      <label>MESAFE</label>
+      <div id="dispDist" style="font-size: 2rem; color: var(--cyan);">0.00 km</div>
+    </div>
+    <div>
+      <label>GÜNCEL PACE</label>
+      <div id="dispPace" style="font-size: 2rem; color: var(--cyan);">-</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let timer = null;
+  let seconds = 0;
+  let distance = 0;
+  let currentPace = 0;
+
+  const startBtn = document.getElementById('startBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  
+  function updateDisplay() {
+    // Süre formatlama (MM:SS)
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    document.getElementById('dispTime').textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    
+    // Mesafe formatlama
+    document.getElementById('dispDist').textContent = `${distance.toFixed(2)} km`;
+    document.getElementById('dispPace').textContent = `${currentPace.toFixed(2)}`;
+    
+    // Sembolü hareket ettir (Pistteki 🏃‍♂️ ikonu)
+    // Örn: 10km'yi pistin %100'ü kabul edersek
+    const athlete = document.querySelector('.symbol'); 
+    if(athlete) athlete.style.left = `${Math.min((distance / 10) * 100, 100)}%`;
+  }
+
+  startBtn.addEventListener('click', () => {
+    if (timer) return;
+    
+    currentPace = parseFloat(document.getElementById('basePace').value);
+    const targetPace = parseFloat(document.getElementById('targetPace').value);
+    const targetKm = parseFloat(document.getElementById('targetKm').value);
+
+    timer = setInterval(() => {
+      seconds++;
+      
+      // Mesafe artışı: saniye başına eklenen km
+      distance += (1 / (currentPace * 60));
+
+      // Pace Değişim Kontrolü
+      if (!isNaN(targetKm) && distance >= targetKm) {
+        currentPace = targetPace;
+      }
+
+      updateDisplay();
+    }, 1000); // Gerçek zamanlı 1 saniye. Hızlandırmak için süreyi düşürebiliriz.
+  });
+
+  stopBtn.addEventListener('click', () => {
+    clearInterval(timer);
+    timer = null;
+  });
+</script>
     <div class="card">
       <h2>Sembolik Performans Karşılaştırması</h2>
       
