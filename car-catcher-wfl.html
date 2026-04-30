@@ -7,6 +7,17 @@
 
   <style>
     /* ── RESET ── */
+    /* Eksik Form ve Buton Stilleri */
+.form-group { margin-bottom: 15px; text-align: left; }
+.form-control {
+  width: 100%; padding: 10px; background: #2a2a2a; 
+  border: 1px solid var(--border); color: var(--text); border-radius: var(--radius);
+}
+.btn {
+  padding: 10px 20px; cursor: pointer; border: 1px solid var(--border);
+  border-radius: var(--radius); font-weight: 600; transition: 0.3s;
+}
+.btn:hover { opacity: 0.8; box-shadow: 0 0 10px var(--cyan); }
     * {
       margin: 0;
       padding: 0;
@@ -93,16 +104,22 @@
     }
 
     /* Sembolik Pist Alanı */
-    .viz-track {
-      background-color: #2a2a2a;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 40px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-      position: relative;
-    }
+  
+<div class="viz-track">
+  <!-- Araba Kulvarı -->
+  <div class="lane">
+    <span class="label-tag">Vehicle Performance (Torque)</span>
+    <!-- ID eklendi: carSymbol -->
+    <div id="carSymbol" class="symbol" style="left: 0%;">🏎️</div>
+  </div>
+  
+  <!-- Koşucu Kulvarı -->
+  <div class="lane">
+    <span class="label-tag">Athlete Pace (Endurance)</span>
+    <!-- ID eklendi: runnerSymbol -->
+    <div id="runnerSymbol" class="symbol" style="left: 0%;">🏃‍♂️</div>
+  </div>
+</div>
 
     .lane {
       height: 60px;
@@ -230,23 +247,24 @@
   let distance = 0;
   let currentPace = 0;
 
+  // Elemanları ID ile seçiyoruz
+  const runner = document.getElementById('runnerSymbol');
+  const car = document.getElementById('carSymbol');
   const startBtn = document.getElementById('startBtn');
   const stopBtn = document.getElementById('stopBtn');
   
   function updateDisplay() {
-    // Süre formatlama (MM:SS)
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
     document.getElementById('dispTime').textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     
-    // Mesafe formatlama
     document.getElementById('dispDist').textContent = `${distance.toFixed(2)} km`;
     document.getElementById('dispPace').textContent = `${currentPace.toFixed(2)}`;
     
-    // Sembolü hareket ettir (Pistteki 🏃‍♂️ ikonu)
-    // Örn: 10km'yi pistin %100'ü kabul edersek
-    const athlete = document.querySelector('.symbol'); 
-    if(athlete) athlete.style.left = `${Math.min((distance / 10) * 100, 100)}%`;
+    // Sadece koşucuyu hareket ettir (10km = %100 genişlik)
+    if(runner) {
+      runner.style.left = `${Math.min((distance / 10) * 100, 100)}%`;
+    }
   }
 
   startBtn.addEventListener('click', () => {
@@ -258,17 +276,14 @@
 
     timer = setInterval(() => {
       seconds++;
-      
-      // Mesafe artışı: saniye başına eklenen km
       distance += (1 / (currentPace * 60));
 
-      // Pace Değişim Kontrolü
       if (!isNaN(targetKm) && distance >= targetKm) {
         currentPace = targetPace;
       }
 
       updateDisplay();
-    }, 1000); // Gerçek zamanlı 1 saniye. Hızlandırmak için süreyi düşürebiliriz.
+    }, 1000);
   });
 
   stopBtn.addEventListener('click', () => {
